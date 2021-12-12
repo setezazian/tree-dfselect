@@ -6,16 +6,29 @@ var Tree = function(value) {
     this.value = value;
     this.children = [];
   };
-  
+
   Tree.prototype.DFSelect = function(filter) {
+    let result = [];
+
+    Tree.prototype.DFSelectRecursive = function(filter, depth) {
+      if (filter(this.value, depth)) {
+        result.push(this.value);
+      };
+      this.children.forEach(child => {
+        child.DFSelectRecursive(filter, depth + 1);
+      });
+    };
+
+    this.DFSelectRecursive(filter, 0);
+    return result;
   };
-  
-  
-  
+
+
+
   /**
    * You shouldn't need to change anything below here, but feel free to look.
     */
-  
+
   /**
     * add an immediate child
     * (wrap values in Tree nodes if they're not already)
@@ -24,7 +37,7 @@ var Tree = function(value) {
     if (!child || !(child instanceof Tree)) {
       child = new Tree(child);
     }
-  
+
     if (!this.isDescendant(child)) {
       this.children.push(child);
     } else {
@@ -33,7 +46,7 @@ var Tree = function(value) {
     // return the new child node for convenience
     return child;
   };
-  
+
   /**
     * check to see if the provided tree is already a child of this
     * tree __or any of its sub trees__
@@ -52,7 +65,7 @@ var Tree = function(value) {
       return false;
     }
   };
-  
+
   /**
     * remove an immediate child
     */
@@ -65,6 +78,6 @@ var Tree = function(value) {
       throw new Error('That node is not an immediate child of this tree');
     }
   };
-  
+
 
 module.exports = Tree;
